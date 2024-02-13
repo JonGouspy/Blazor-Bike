@@ -1,0 +1,184 @@
+﻿@page "/bike"
+@attribute [StreamRendering]
+
+<PageTitle>Bike</PageTitle>
+
+<h1>Bike</h1>
+
+@if (bikeStation == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <button class="btn btn-primary" @onclick="Create">Create New</button>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Number
+                </th>
+                <th>
+                    Contract Name
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Address
+                </th>
+                <th>
+                    Banking
+                </th>
+                <th>
+                    Bonus
+                </th>
+                <th>
+                    Bike stands
+                </th>
+                <th>
+                    Available Bike Stands
+                </th>
+                <th>
+                    Available Bikes
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Last Update
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in bikeStation)
+            {
+                <tr>
+                    <td>
+                        @item.number
+                    </td>
+                    <td>
+                        @item.contract_name
+                    </td>
+                    <td>
+                        @item.name
+                    </td>
+                    <td>
+                        @item.address
+                    </td>
+                    <td>
+                        @item.banking
+                    </td>
+                    <td>
+                        @item.bonus
+                    </td>
+                    <td>
+                        @item.bike_stands
+                    </td>
+                    <td>
+                        @item.available_bike_stands
+                    </td>
+                    <td>
+                        @item.available_bikes
+                    </td>
+                    <td>
+                        @item.status
+                    </td>
+                    <td>
+                        @item.last_update
+                    </td>
+                    <td>
+                        <NavLink class="nav-link" href="details">
+                            <span aria-hidden="true"> </span> Details
+                        </NavLink>
+                        <!--   @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) | -->
+                        <!-- @Html.ActionLink("Details", "Details", new { id = item.number }) -->
+                        <!--   @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ }) -->
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code{
+    private BikeStation[]? bikeStation;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Simulate asynchronous loading to demonstrate streaming rendering
+        await Task.Delay(500);
+
+        var startDate = DateOnly.FromDateTime(DateTime.Now);
+        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
+        bikeStation = Enumerable.Range(1, 20).Select(index => new BikeStation
+            {
+                number = Random.Shared.Next(0, 40),
+                contract_name = summaries[Random.Shared.Next(0, 10)],
+                name = summaries[Random.Shared.Next(0, 10)],
+                address = summaries[Random.Shared.Next(0, 10)],
+                position = new Position(),
+                banking = Random.Shared.Next(0, 2) switch
+                {
+                    0 => false,
+                    _ => true
+                },
+                bonus = Random.Shared.Next(0, 2) switch
+                {
+                    0 => false,
+                    _ => true
+                },
+                bike_stands = Random.Shared.Next(0, 40),
+                available_bike_stands = Random.Shared.Next(0, 40),
+                available_bikes = Random.Shared.Next(0, 40),
+                status = Random.Shared.Next(0, 2) switch
+                {
+                    0 => "CLOSE",
+                    _ => "OPEN"
+                },
+                last_update = DateOnly.FromDateTime(DateTime.Now)
+
+            }).ToArray();
+    }
+
+    public class BikeStation
+    {
+        public int number { get; set; }
+        public string contract_name { get; set; }
+        public string name { get; set; }
+        public string address { get; set; }
+        public Position position { get; set; }
+        public bool banking { get; set; }
+        public bool bonus { get; set; }
+        public int bike_stands { get; set; }
+        public int available_bike_stands { get; set; }
+        public int available_bikes { get; set; }
+        public string status { get; set; }
+        public DateOnly last_update { get; set; }
+    }
+
+    public class BikeStationDTO
+    {
+        public int BikeStationId { get; set; }
+        public string contract_name { get; set; }
+        public string name { get; set; }
+        public string address { get; set; }
+
+        public int bike_stands { get; set; }
+        public int available_bike_stands { get; set; }
+        public int available_bikes { get; set; }
+
+    }
+    public class Position
+    {
+        public float lat { get; set; }
+        public float lng { get; set; }
+    }
+
+    public void Create()
+    {
+
+    }
+}
